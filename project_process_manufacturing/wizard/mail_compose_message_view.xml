@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="email_compose_message_wizard_form_inherit_manufacture_process">
+            <field name="name">mail.compose.message.form.inherit.manufacture.process</field>
+            <field name="model">mail.compose.message</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='subject']"
+                       position="after">
+                    <field name="is_followers" attrs="{'invisible': [('is_log', '=', True)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='subject']"
+                       position="before">
+                    <field name="is_from_recipient" invisible="1"/>   
+                    <field name="email_to" invisible="1"/>
+                    <field name="email_cc" attrs="{'invisible': [('is_log', '=', True)]}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_send_mail']" position="replace">
+                    <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="action_send_mail" type="object" class="btn-primary o_mail_send" context="{'mail_post_autofollow':is_followers,'is_from_recipient':is_from_recipient}"/>    
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

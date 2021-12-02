@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Form view of wizard attribute process-->
+    <record id="view_wizard_product_attribute_process_form" model="ir.ui.view">
+        <field name="name">view.wizard.product.attribute.process.form</field>
+        <field name="model">wizard.attribute.process</field>
+        <field name="arch" type="xml">
+            <form string="Product Attribute Form">
+                <header>
+                        <field name="state" readonly="1" widget="statusbar"
+                               statusbar_visible="step1"/>
+                    </header>
+                <group states="step1">
+                    <group>
+                        <field name="product_template_id" invisible="1" required="1"/>
+                        <field name="is_set_attribute" widget="boolean_toggle"/>
+                    </group>
+                    <group>
+                        <field name="create_product_ids" widget='many2many_tags' invisible="1"/>
+                        <field name="process_with_pricelist" widget="boolean_toggle"/>
+                    </group>
+                </group>
+
+                <group states="step2">
+                    <group>
+                        <field name="product_pricelist_id" invisible="0"/>
+                        <field name="update_pricelist_for_selected_product" widget="boolean_toggle"/>
+                    </group>
+                    <group>
+                        <field name="select_create_product_ids" widget='many2many_tags' invisible="0" domain="[('id', 'in', create_product_ids)]" attrs="{'invisible': [('update_pricelist_for_selected_product','=',False)],'required':[('update_pricelist_for_selected_product','=',True)]}"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page name="process_line" string="Attibute Combination" states="step1">
+                        <field name="process_line_ids" force_save="1">
+                            <tree string="Attribute Process Line" editable="bottom" create="false" delete='false'>
+                                <field name="wizard_attribute_id" invisible="1"/>
+                                <field name="product_attribute_line_id" invisible="1"/>
+                                <field name="attribute_id" options="{'no_create': True}"/>
+                                <field name="value_ids" invisible="1"/>
+                                <field name="custom_value_ids" widget="many2many_tags"
+                                       options="{'no_create': True}" required="1"
+                                       domain="[('id', 'in', value_ids )]"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name="price_list" string="Pricelist Template" states="step2">
+                        <field name="pricelist_item_ids" force_save="1">
+                            <tree string="Product Product Pricelist Item" editable="bottom">
+                                <field name="wizard_attribute_id" invisible="1"/>
+                                <field name="min_quantity" required="1"/>
+                                <field name="price"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer states="step1">
+                    <button string="Process Variant" name="process_product_attribute"
+                            type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-secondary"
+                            special="cancel"/>
+                </footer>
+                <footer states="step2">
+                    <button string="Process Pricelist" name="process_pricelist"
+                            type="object" class="oe_highlight"/>
+                    <button string="Close" class="btn btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action of wizard.attribute.process-->
+    <act_window id="action_wizard_product_attribute_process"
+                name="Product Variant Process"
+                binding_model="product.template"
+                res_model="wizard.attribute.process"
+                view_mode="form" target="new"
+    />
+</odoo>

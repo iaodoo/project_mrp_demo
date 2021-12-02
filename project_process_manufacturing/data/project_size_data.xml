@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Create data file of project size-->
+    <data noupdate="1">
+        <record id="project_size_small" model="project.size">
+            <field name="name">Small</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="project_size_large" model="project.size">
+            <field name="name">Large</field>
+            <field name="sequence">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_bom_volume" model="decimal.precision">
+            <field name="name">Bom Volume</field>
+            <field name="digits">10</field>
+        </record>
+    </data>
+</odoo>

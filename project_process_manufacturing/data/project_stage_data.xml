@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Project Stages-->
+
+        <record id="project_stage_new" model="project.stage">
+            <field name="sequence">1</field>
+            <field name="name">New</field>
+            <field name="case_default" eval="1"/>
+        </record>
+        <record id="project_stage_inprogress" model="project.stage">
+            <field name="sequence">2</field>
+            <field name="name">Inprogress</field>
+        </record>
+        <record id="project_stage_done" model="project.stage">
+            <field name="sequence">3</field>
+            <field name="name">Done</field>
+        </record>
+        <record id="project_stage_coc" model="project.stage">
+            <field name="sequence">4</field>
+            <field name="name">Coc</field>
+        </record>
+        <record id="project_stage_toc" model="project.stage">
+            <field name="sequence">5</field>
+            <field name="name">Toc</field>
+        </record>
+        <record id="project_stage_retention1" model="project.stage">
+            <field name="sequence">6</field>
+            <field name="name">Retention 1</field>
+        </record>
+        <record id="project_stage_retention2" model="project.stage">
+            <field name="sequence">7</field>
+            <field name="name">Retention 2</field>
+        </record>
+        <record id="project_stage_cancel" model="project.stage">
+            <field name="sequence">8</field>
+            <field name="name">Cancelled</field>
+        </record>
+
+        <record id="project_stage_1" model="project.task.type">
+            <field name="sequence">10</field>
+            <field name="name">In Progress</field>
+            <field name="legend_blocked">Need functional or technical help</field>
+            <field name="legend_done">Buzz or set as done</field>
+        </record>
+        <record id="project_stage_2" model="project.task.type">
+            <field name="sequence">20</field>
+            <field name="name">Done</field>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="project_stage_3" model="project.task.type">
+            <field name="sequence">30</field>
+            <field name="name">Cancelled</field>
+            <field name="legend_done">Ready to reopen</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <record id="project_stage_4" model="project.task.type">
+            <field name="sequence">40</field>
+            <field name="name">To Approve</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <record id="project_stage_5" model="project.task.type">
+            <field name="sequence">50</field>
+            <field name="name">Approved</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <record id="project_stage_6" model="project.task.type">
+            <field name="sequence">51</field>
+            <field name="name">Waiting Customer Feedback</field>
+            <field name="fold" eval="True"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- res.config override to to add sale approval setting -->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.validity
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+            ref="sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sale_config_online_confirmation_sign']"
+                position="before">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="so_order_approval" />
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="so_order_approval" />
+                        <span class="fa fa-lg fa-building-o"
+                            title="Values set here are company-specific."
+                            aria-label="Values set here are company-specific."
+                            groups="base.group_multi_company" role="img" />
+                        <div class="text-muted">
+                            Managers must approve orders
+                        </div>
+                        <div class="content-group"
+                            attrs="{'invisible': [('so_order_approval', '=', False)]}">
+                            <div class="row mt16">
+                                <label for="so_double_validation_amount"
+                                    class="col-lg-4 o_light_label" />
+                                <field name="so_double_validation_amount" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Product Variant Creation Limit</span>
+                        <div class="text-muted">
+                            Configuration to set limit of Product Variant Creation.
+                        </div>
+                        <div class="row mt16">
+                            <label for="product_variant_creation_limit"
+                                   string="Creation Limit"
+                                   class="col-lg-4 o_light_label"/>
+                            <field name="product_variant_creation_limit"
+                                   class="oe_inline"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Small Project Process-->
+        <record id="small_project_process_sale_order_confirm" model="process.process">
+            <field name="name">Sales Order confirm</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_approval" eval="0"/>
+            <field name="sequence">1</field>
+        </record>
+        <record id="small_prcess_project_kick_off" model="process.process">
+            <field name="name">Project Kick Off</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_sample" eval="0"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_approval" eval="0"/>
+            <field name="sequence">2</field>
+        </record>
+        <record id="small_process_design_phase_submitted" model="process.process">
+            <field name="name">Design Phase Submitted</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_approval" eval="0"/>
+            <field name="sequence">3</field>
+        </record>
+        <record id="small_process_design_phase_approved" model="process.process">
+            <field name="name">Design Phase Approved</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_approval" eval="1"/>
+            <field name="need_customer_feedback" eval="0"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="small_process_data_phase_competed" model="process.process">
+            <field name="name">Data Phase Competed</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_procurement" eval="1"/>
+            <field name="is_approval" eval="0"/>
+            <field name="sequence">5</field>
+        </record>
+        <record id="small_process_pre_press_production_phase" model="process.process">
+            <field name="name">Pre Press Production Phase</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_approval" eval="1"/>
+            <field name="sequence">6</field>
+        </record>
+        <record id="small_process_proof_sent" model="process.process">
+            <field name="name">Proof Sent</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_approval" eval="0"/>
+            <field name="sequence">7</field>
+        </record>
+        <record id="small_project_process_proof_approved_from_clinet" model="process.process">
+            <field name="name">Proof Approved from Clinet</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_approval" eval="1"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="large_process_production_in_process" model="process.process">
+            <field name="name">Production In Process</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_manufacturing" eval="1"/>
+            <field name="is_approval" eval="0"/>
+            <field name="sequence">9</field>
+        </record>
+        <record id="large_process_order_mailed_out_completed" model="process.process">
+            <field name="name">Order Mailed Out completed</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_sample" eval="0"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_approval" eval="0"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="large_project_process_incoming_mail_phase" model="process.process">
+            <field name="name">Incoming Mail Phase</field>
+            <field name="project_size_id" ref="project_size_small"/>
+            <field name="is_manufacturing" eval="0"/>
+            <field name="is_approval" eval="0"/>
+            <field name="sequence">11</field>
+        </record>
+    </data>
+</odoo>

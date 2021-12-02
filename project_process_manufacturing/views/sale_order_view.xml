@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- inherited sale order form view  -->
+    <record id="view_order_form_saletype_inherit" model="ir.ui.view">
+        <field name="name">view.order.form.saletype.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_order_template_id']"
+                   position="before">
+                <field name="email_cc"/>
+                <field name="sale_type"
+                       attrs="{'readonly':[('state','in',('sale','cancel','done'))]}"
+                />
+                <field name="project_size_id" options="{'no_create': True}"
+                       attrs="{'readonly':[('state','in',('sale','cancel','done'))],
+                    'required':[('sale_type','in',('supply','supply_install'))],
+                    'invisible': [('sale_type', 'not in', ('supply','supply_install'))]}"/>
+                <field name="down_payment"/>
+            </xpath>
+
+
+        </field>
+    </record>
+
+    <record id="sale_order_form_view_project" model="ir.ui.view">
+        <field name="name">sale.sample.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_confirm']"
+                   position="before">
+                <button name="button_approve" type="object"
+                        string="Plan Project"
+                        class="oe_highlight"
+                        attrs="{'invisible': ['|',('state', '!=', 'to approve'), ('simple_sale_order', '!=', False)]}"
+                        groups="project_process_manufacturing.group_plan_project"/>
+                <button name="button_confirm_sale" type="object"
+                        string="Confirm Sale"
+                        class="oe_highlight"
+                        attrs="{'invisible': ['|',('state', '!=', 'to approve'), ('simple_sale_order', '=', False)]}"
+                        groups="project_process_manufacturing.group_plan_project"/>
+            </xpath>
+            <field name="date_order" position="after">
+                <field name="date_approve"/>
+                <field name="simple_sale_order" invisible="1"/>
+            </field>
+           <!--  <xpath expr="//page[@name='order_lines']//tree/field[@name='product_uom_qty']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('sale','done','cancel'))]}</attribute>
+            </xpath> -->
+           <!--  <xpath expr="//page[@name='order_lines']//tree/field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('sale','done','cancel'))]}</attribute>
+            </xpath> -->
+            <xpath expr="//page[@name='order_lines']//tree/field[@name='product_uom_qty']" position="after">
+                <field name="qty_available" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//tree/field[@name='name']" position="after">
+                <field name="fg_part_no_description"/>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="after">
+                <page name="Process" string="Process Cost">
+                    <field name="process_line_ids" force_save="1">
+                        <tree string="Process Cost Lines" editable="bottom">
+                            <field name="project_id" invisible="1"/>
+                            <field name="product_id" required="1"/>
+                            <field name="routing_id" required="1"/>
+                            <field name="process_id" required="1"
+                                   context="{'routing_id':routing_id}"/>
+                            <field name="product_uom_id"/>
+                            <field name="quantity"/>
+                            <field name="sale_price" invisible="1"/>
+                            <field name="cost" invisible="1"/>
+                            <field name="used_process" invisible="1"/>
+                            <field name="remaining_process" invisible="1"/>
+                            <field name="total_process" string="Total" invisible="1"/>
+                            <field name="total_sale_price" string="Sale Total"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_project"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-puzzle-piece"
+                        string="Project Overview"
+                        attrs="{'invisible': [('no_of_project', '=',0)]}">
+                    <field name="no_of_project" nolabel="1"
+                           widget="statinfo" invisible="1"/>
+                    <field name="related_project_id" invisible="1"/>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="before">
+                <page name="ProjectProcess" string="Project Process">
+                    <field name="sale_process_ids" >
+                        <tree  string="ProjectProcess" readonly="1" force_save="1">
+                            <field name="sale_id" invisible="1"/>
+                            <field name="process_id"/>
+                            <field name="project_size_id" invisible="1"/>
+                            <field name="is_manufacturing" invisible="0"/>
+                            <field name="is_approval" invisible="1"/>
+                        </tree >
+                    </field>
+                </page>
+                <page name="Rawmateriallines" string="Component Product">
+                    <field name="raw_material_line_ids" force_save="1">
+                        <tree string="Raw Material Lines" editable="bottom">
+                            <field name="sale_id" invisible="1"/>
+                            <field name="finished_product_id"
+                                   domain="[('id', 'in', dummy_finish_product_ids)]"
+                                   required="1"/>
+                            <field name="project_id" invisible="1"/>
+                            <field name="product_id"
+                                   domain="[('type','!=','service')]"
+                                   context="{'show_raw_material': 1}" string='Component Product'/>
+                            <field name="dummy_finish_product_ids"
+                                   widget="many2many_tags" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
+                            <field name="square_meter" style="text-align:center;" invisible="1"/>
+                            <field name="order_qty" style="text-align:center;" attrs="{'readonly': [('parent.state', 'in',('sale','done','cancel'))]}"/>
+                            <field name="qty_available" readonly="1"
+                                   force_save="1" style="text-align:center;" invisible="1"/>
+                            <field name="cost" style="text-align:center;" invisible="1" />
+                            <field name="used_qty" force_save="1" readonly="1" style="text-align:center;" invisible="1"/>
+                            <field name="remaining_qty" force_save="1" style="text-align:center;" invisible="1"/>
+                            <field name="part_number" string="Part Number" required="0" force_save="1" width="209px"/>
+                            <field name="total_raw_material_cost"
+                                   force_save="1" style="text-align:center;" invisible="1"/>
+                        </tree>
+                    </field>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited search view of sale order -->
+    <record id="inherited_search_view_sale_order" model="ir.ui.view">
+        <field name="name">inherited.search.view.sale.order</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="sale_type"/>
+                <field name="project_size_id"/>
+            </field>
+            <xpath expr="//group" position="inside">
+                <filter string="Project Scope" name="sale_type"
+                        context="{'group_by':'sale_type'}"/>
+                <filter string="Project Type" name="project_size_id"
+                        context="{'group_by':'project_size_id'}"/>
+            </xpath>
+            <filter name="my_sale_orders_filter" position="after">
+                <filter string="To Approve" domain="[('state','=','to approve')]" name="my_sale_waiting_for_approval"/>
+                <filter string="Remaining To Approve" name="remaining_to_approve" domain="[('state', '=', 'credit_check')]"/>
+            </filter>
+             <xpath expr="//group" position="inside">
+                <filter string="Approval Date" name="date_approval" context="{'group_by':'date_approve'}"/>
+             </xpath>
+        </field>
+    </record>
+
+    <record id="action_credit_approve_orders" model="ir.actions.act_window">
+        <field name="name">Credit Approve Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="context">{'search_default_remaining_to_approve': 1}</field>
+        <field name="domain">[('is_check_approve','=',True),('state', 'in', ('to approve', 'credit_check'))]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p><p>
+                Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <!-- Main menu for Credit Check and credit Approve in Sale -->
+    <menuitem id="menu_sales_credit_approve"
+            name="Credit Process"
+            parent="sale.sale_menu_root"
+            sequence="2"
+            groups="sales_team.group_sale_manager"/>
+
+    <menuitem id="menu_credit_approve_order"
+            name="Credit Approve Orders"
+            action="action_credit_approve_orders"
+            parent="menu_sales_credit_approve"
+            sequence="2" groups="sales_team.group_sale_salesman"/>
+
+</odoo>

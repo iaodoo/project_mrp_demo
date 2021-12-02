@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Create tree view of project size-->
+    <record id="view_project_size_tree" model="ir.ui.view">
+        <field name="name">project.size.tree.view</field>
+        <field name="model">project.size</field>
+        <field name="arch" type="xml">
+            <tree string="Project Type"> <!-- editable="bottom" -->
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Project Size Form view  -->
+    <record id="project_size_view_form" model="ir.ui.view">
+        <field name="name">project.size.view.form</field>
+        <field name="model">project.size</field>
+        <field name="arch" type="xml">
+            <form string="Project Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Project Process" >
+                            <field name="project_process_ids" widget="one2many" nolabel="1" readonly="0">
+                                <tree string="Process" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sequence_num"/>
+                                    <field name="name"/>
+                                    <field name="task_validity_days"/>    
+                                    <field name="project_size_id" string="Project Size"/>
+                                    <field name="add_follower"/>
+                                    <field name="user_id"/>
+<!--                                    <field name="product_id" attrs="{'required':[('is_service','=',True)],'readonly': [('is_service','=',False)]}" domain="[('type', '=', 'service')]"/>-->
+                                    <field name="is_sample"/>
+<!--                                    <field name="is_service"/>-->
+                                    <field name="is_manufacturing"/>
+                                    <field name="is_procurement"/>
+                                    <field name="is_approval"/>
+                                    <field name="is_internal_approval"/>
+                                    <field name="need_customer_feedback"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--Create action of project.size object-->
+    <record id="action_project_size"
+            model="ir.actions.act_window">
+        <field name="name">Project Type</field>
+        <field name="res_model">project.size</field>
+        <field name="binding_view_types">tree</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--Create menu of Project Size-->
+    <menuitem id="menu_project_size"
+              name="Project Type"
+              parent="project.menu_project_config"
+              sequence="6"
+              action="action_project_size"/>
+</odoo>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- inherit project view of project cost management module -->
+    <record id="project_form_view_inherit_variation" model="ir.ui.view">
+        <field name="name">project.inherit.form.view</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_confirm" string="Confirm" type="object"
+                class="btn-primary"
+                attrs="{'invisible': [('project_stage_visible', 'in', ('inprogress','done','cancel'))]}"/>
+                <button name="action_cancel" string="Cancel" type="object"
+                class="btn-primary"
+                attrs="{'invisible': [('project_stage_visible', 'in',('done','cancel'))]}"/>
+                <button name="action_done" string="Done" type="object"
+                class="btn-primary"
+                attrs="{'invisible': [('project_stage_visible', 'in',('new','done','cancel'))]}"/>
+                <button name="set_to_draft" string="Set to Draft" type="object"
+                class="btn-primary"
+                attrs="{'invisible': [('project_stage_visible', 'in',('new','done','inprogress'))]}"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']/button[@name='%(project.act_project_project_2_project_task_all)d']"
+                   position="after">
+                <button name="action_view_portal_tasks"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-tasks"
+                        attrs="{'invisible': ['|',('portal_task_count', '=', 0)]}">
+                    <field name="portal_task_count"
+                           string="Portal Tasks"
+                           widget="statinfo" invisible="0"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="project_stage_visible" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='settings']" position="before">
+                <page name="Rawmateriallines" string="Raw Material">
+                    <field name="raw_material_line_ids" force_save="1">
+                        <tree string="Raw Material Lines" editable="bottom">
+                            <field name="sale_id" invisible="1"/>
+                            <field name="finished_product_id"
+                                   domain="[('id', 'in', dummy_finish_product_ids)]"
+                                   required="1"/>
+                            <field name="project_id" invisible="1"/>
+                            <field name="product_id"
+                                   domain="[('type','!=','service')]"
+                                   context="{'show_raw_material': 1}" string='Component Product'/>
+                            <field name="dummy_finish_product_ids"
+                                   widget="many2many_tags" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
+                            <field name="square_meter" style="text-align:center;" invisible="1"/>
+                            <field name="order_qty" style="text-align:center;"/>
+                            <field name="qty_available" readonly="1"
+                                   force_save="1" style="text-align:center;" invisible="1"/>
+                            <field name="cost" style="text-align:center;" invisible="1" />
+                            <field name="used_qty" force_save="1" readonly="1" style="text-align:center;" invisible="1"/>
+                            <field name="remaining_qty" force_save="1" style="text-align:center;" invisible="1"/>
+                            <field name="part_number" string="Part Number" required="1" force_save="1"/>
+                            <field name="total_raw_material_cost"
+                                   force_save="1" style="text-align:center;" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='Rawmateriallines']" position="before">
+                <page name="Finished products" string="Ordered Items">
+                    <field name="finished_sale_line_ids" readonly="1">
+                        <tree string="Finished Products">
+                            <field name="project_sale_id" invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="product_uom_qty" style="text-align:center;"/>
+                            <field name="qty_available" readonly="1"
+                                   force_save="1" invisible="1"/>
+                            <field name="product_uom" style="text-align:center;"/>
+                            <field name="price_unit" style="text-align:center;"/>
+                            <field name="tax_id" invisible="1"/>
+                            <field name="price_subtotal"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='settings']" position="before">
+                <page name="Details" string="Details">
+                        <group>
+                            <group>
+                                <field name="job_number"/>
+                                <field name="date_confirm" readonly="1"/>
+                            </group>
+                        </group>
+                    </page>
+            </xpath>
+            <xpath expr="//div[@name='options_active']" position="before">
+                <div name="project_title">
+                    <label for="project_title" class="oe_inline" string="Project Title :"/>
+                    <field name="project_title" readonly="0"/>
+                </div>
+                <div name="SalesType">
+                    <label for="label_sales_type" class="oe_inline" string="Project Scope :"/>
+                    <field name="sale_type" readonly="1"/>
+                </div>
+                <div name="Project Scope">
+                    <label for="label_project_type" class="oe_inline" string="Project Type :"/>
+                    <field name="project_size_id" options="{'no_create': True}"
+                           readonly="1"/>
+                </div>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_coc" string="COC Done" type="object" class="btn-primary"
+                attrs="{'invisible': [('project_stage_name', '!=', 'Done')]}"/>
+                <button name="action_toc" string="TOC Done" type="object" class="btn-primary"
+                attrs="{'invisible': [('project_stage_name', '!=', 'Coc')]}"/>
+                <button name="action_retention1" string="Retention 1" type="object" class="btn-primary"
+                attrs="{'invisible': [('project_stage_name', '!=', 'Toc')]}"/>
+                <button name="action_retention2" string="Retention 2" type="object" class="btn-primary"
+                attrs="{'invisible': [('project_stage_name', '!=', 'Retention 1')]}"/>
+                <field name="stage_id" widget="statusbar" options="{'fold_field': 'fold'}"
+                 />
+                <field name="project_stage_name" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='emails']" position="after">
+                <page name="Process" string="Process Cost">
+                    <field name="process_line_ids" force_save="1">
+                        <tree string="Process Cost Lines" editable="bottom">
+                            <field name="project_id" invisible="1"/>
+                            <field name="product_id" required="1"/>
+                            <field name="routing_id" required="1"/>
+                            <field name="process_id" required="1"
+                                   context="{'routing_id':routing_id}"/>
+                            <field name="product_uom_id"/>
+                            <field name="quantity"/>
+                            <field name="sale_price"/>
+                            <field name="cost"/>
+                            <field name="used_process"/>
+                            <field name="remaining_process"/>
+                            <field name="total_process" string="Total"/>
+                            <field name="total_sale_price" string="Sale Total"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='emails']" position="before">
+                <page name="ProjectProcess" string="Project Process">
+                    <field name="project_process_ids" force_save="1">
+                        <tree  string="ProjectProcess">
+                            <field name="project_id" invisible="1"/>
+                            <field name="process_id"/>
+                            <field name="user_id"/>
+                            <field name="project_size_id" invisible="1"/>
+                            <field name="is_sample" invisible="1"/>
+                            <field name="is_manufacturing" invisible="1"/>
+                            <field name="is_approval" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="project_search" model="ir.ui.view">
+        <field name="name">project_stage.search.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/filter[@name='Partner']" position="after">
+                <filter string="Confirmation Date" name="date_confirm"
+                        context="{'group_by': 'date_confirm'}"/>
+            </xpath>
+            <field name="name" position="after">
+                <field name="project_title" string="Project Title"/>
+                <field name="stage_id" string="Stage"/>
+            </field>
+            <group expand="0">
+                <filter string="Stage" name="stage_id" help="Stage" context="{'group_by':'stage_id'}"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="project_kanban_form" model="ir.ui.view">
+        <field name="name">project_stage.kanban</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban/field[@name='name']" position="before">
+                <field name="stage_id"/>
+                <field name="sequence"/>
+                <field name="sale_project_id"/>
+                <field name="finished_sale_line_ids"/>
+            </xpath>
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_group_by">stage_id</attribute>
+            </xpath>
+            <xpath expr="//span[@t-if='record.partner_id.value']" position="replace">
+                <strong><span t-if="record.partner_id.value">
+                            <t t-esc="record.partner_id.value"/>
+                        </span>
+                </strong>
+            </xpath>
+            <xpath expr="//div[hasclass('o_primary')]" position="after">
+                <div class="o_primary">
+                    <span t-if="record.sale_project_id.value">
+                        Sale Order : <t t-esc="record.sale_project_id.value"/><br/>
+                        <span>Products : </span>
+                    </span>
+                    <div style="padding-left:17px;">
+                    <t t-set="remaining_qty" t-value="0.0" />
+                    <t t-foreach="record.finished_sale_line_ids.raw_value" t-as="product">
+                        <t t-if="product.product_type == 'product'">
+                            <t t-set="remaining_qty" t-value="product.product_uom_qty - product.mrp_remaining_qty_add "/>
+                            <strong>- </strong>
+                            <t t-esc="product.name"/><br/>
+                            <strong>In Production Quantity : </strong> <t t-esc="product.mrp_remaining_qty_add"/><br/>
+                            <strong>Remaining Quantity : </strong> <t t-esc="remaining_qty"/><br/>
+                            <strong>Total Quantity : </strong> <t t-esc="product.product_uom_qty"/><br/>
+                        </t>
+                    </t>
+                </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!--Project Stage Form view  -->
+    <record id="project_stage_form" model="ir.ui.view">
+        <field name="name">project.stage.form</field>
+        <field name="model">project.stage</field>
+        <field name="arch" type="xml">
+            <form string="Task Stage">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                    </group>
+                    <group>
+                        <field name="case_default"/>
+                        <field name="fold"/>
+                    </group>
+                </group>
+                <field name="description" placeholder="Add a description..."/>
+            </form>
+        </field>
+    </record>
+
+    <!--Action For Project Stage  -->
+    <record id="action_project_stage" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">project.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--Menu Item For Project Stage  -->
+    <menuitem name="Project Stages"
+        id="project_stages"
+        parent="project.menu_project_config"
+        action="action_project_stage"
+        sequence="3"/>
+        
+    <record id="project_process_form_view" model="ir.ui.view">
+        <field name="name">project.process.form.view</field>
+        <field name="model">project.process</field>
+        <field name="arch" type="xml">
+            <form string="Process Cost">
+                <group>
+                    <group>
+                        <field name="product_id" required="1"/>
+                        <field name="routing_id" string="Project Scope" required="1"/>
+                        <field name="process_id" required="1"
+                                   context="{'routing_id':routing_id}"/>
+                        <field name="product_uom_id"/>
+                        <field name="quantity"/>
+                    </group>
+                    <group>
+                        <field name="sale_price"/>
+                        <field name="cost"/>
+                        <field name="used_process"/>
+                        <field name="remaining_process"/>
+                        <field name="total_process" string="Total"/>
+                        <field name="total_sale_price" string="Total"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_raw_material_form_view" model="ir.ui.view">
+        <field name="name">project.raw.material.form.view</field>
+        <field name="model">project.raw.material</field>
+        <field name="arch" type="xml">
+            <form string="Project Raw Material">
+                <group>
+                    <group>
+                        <field name="project_id" invisible="1"/>
+                        <field name="product_id"
+                               domain="[('type','!=','service')]"
+                               context="{'show_raw_material': 1}"/>
+                        <field name="dummy_finish_product_ids"
+                               widget="many2many_tags" invisible="1"/>
+                        <field name="finished_product_id"
+                               domain="[('id', 'in', dummy_finish_product_ids)]"
+                               required="1"/>
+                        <field name="location_id" invisible="1"/>
+                        <field name="location_dest_id" invisible="1"/>
+                        <field name="remaining_qty" force_save="1" style="text-align:center;"/>
+                    </group>
+                    <group>
+                        <field name="order_qty" style="text-align:center;"/>
+                        <field name="qty_available" readonly="1"
+                               force_save="1" style="text-align:center;"/>
+                        <field name="cost" style="text-align:center;"/>
+                        <field name="used_qty" force_save="1" readonly="1"
+                               style="text-align:center;"/>
+                        <field name="total_raw_material_cost"
+                               force_save="1" style="text-align:center;"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+    
+    <record id="project.act_project_project_2_project_task_all" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+            <field name="domain">[('parent_id', '=', False)]</field>
+            <field name="context">{
+                'pivot_row_groupby': ['user_id'],
+                'search_default_project_id': [active_id],
+                'default_project_id': active_id,
+            }</field>
+            <field name="search_view_id" ref="project.view_task_search_form"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Click <i>Create</i> to start a new task.
+                </p><p>
+                    To get things done, use activities and status on tasks.<br/>
+                    Chat in real time or by email to collaborate efficiently.
+                </p>
+            </field>
+        </record>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_backorder_confirmation_inherit_project_process_manufacturing" model="ir.ui.view">
+        <field name="name">stock_backorder_confirmation.inherit</field>
+        <field name="model">stock.backorder.confirmation</field>
+        <field name="inherit_id" ref="stock.view_backorder_confirmation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='process_cancel_backorder']"
+                   position="replace"/>
+            <xpath expr="//form/group"
+                   position="replace">
+                <group>
+                    <p>
+                        You have processed less products than the initial demand.
+                    </p><p class="text-muted">
+                        Create a backorder if you expect to process the remaining
+                        products later.
+                    </p>
+                </group>
+            </xpath>       
+        </field>
+    </record>
+</odoo>

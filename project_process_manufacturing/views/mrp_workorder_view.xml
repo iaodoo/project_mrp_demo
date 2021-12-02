@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- inherit workorder form view -->
+    <record id="mrp_production_workorder_equipment"
+        model="ir.ui.view">
+        <field name="name">mrp.workorder.equipment.form</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id"
+            ref="mrp.mrp_production_workorder_form_view_inherit" />
+        <field name="arch" type="xml">
+            <field name="is_produced" position="after">
+                <field name="sale_type" attrs="{'readonly':[('state','!=','pending')]}"/>
+                <field name="project_size_id" options="{'no_create': True}" attrs="{'readonly':[('state','!=','pending')]}"/>
+                <field name="part_number" readonly="True" string="Part Number"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_view_form_tablet_pieces" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.form.inherit.quality.tablet.pieces</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <field name="qty_producing" position="attributes">
+                <attribute name="attrs">{}</attribute>
+                <attribute name="readonly">0</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+            <field name="name" position="after">
+                -
+                <field name="part_number" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="inherit_mrp_view_mrp_production_workorder_form_view_filter" model="ir.ui.view">
+        <field name="name">mrp.workorder.search</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_workorder_form_view_filter"/>
+        <field name="arch" type="xml">
+            <field name="production_id" position="after">
+                <field name="part_number" string="Part Number"/>
+            </field>
+            <xpath expr="//group" position="inside">
+                <filter string="Part Number" name="part_number" domain="[]" context="{'group_by': 'part_number'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tree view -->
+    <record id="inherit_mrp_mrp_production_workorder_tree_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.workorder.search</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_view_inherit"/>
+        <field name="arch" type="xml">
+            <field name="date_planned_start" position="after">
+                <field name="date_planned_finished"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="view_folder_directory_tree" model="ir.ui.view">
+        <field name="name">folder.directory.tree</field>
+        <field name="model">folder.directory</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <tree string="Folder Directory">
+                <field name="model_id"/>
+                <field name="name"/>
+                <field name="parent_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_folder_directory_form" model="ir.ui.view">
+        <field name="name">folder.directory.form</field>
+        <field name="model">folder.directory</field>
+        <field name="type">form</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <form string="Folder Directory">
+            <sheet>
+                <group>
+                    <group>
+                        <field name="model_id" options="{'no_create': True}"/>
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                        <field name='directory_hierarchy'/>
+                        <button name="create_directory_structure" type="object"
+                                string="Test Directory"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_folder_directory_search" model="ir.ui.view">
+        <field name="name">folder.directory.search</field>
+        <field name="model">folder.directory</field>
+        <field name="type">search</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <search string="Folder Directory">
+            <field name="parent_id" select="True"/>
+            <group expand="0" string="Group By">
+                <filter name="parent_id" string="Root Folder" domain="[]" context="{'group_by': 'parent_id'}"/>
+            </group>
+        </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_open_folder_directory_view">
+        <field name="name">Folder Directory</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">folder.directory</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_folder_directory_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="act_open_folder_directory_view_form">
+        <field name="act_window_id" ref="act_open_folder_directory_view"/>
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_folder_directory_form"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="act_open_folder_directory_view_tree">
+        <field name="act_window_id" ref="act_open_folder_directory_view"/>
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_folder_directory_tree"/>
+    </record>
+
+    <menuitem id="menu_folder_directory"
+        parent="project.menu_project_config"
+        sequence="5"
+        action="act_open_folder_directory_view"/>
+</odoo>

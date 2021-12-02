@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Project Task Form View inherited-->
+    <record id="view_task_form_button_inherited" model="ir.ui.view">
+        <field name="name">project.task.form.button.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="
+                    %(project_process_manufacturing.action_procurement_order_request)d"
+                    string="Procurement Request" type="action"
+                    class="oe_highlight"
+                    attrs="{'invisible': [('is_procurement','=',False)]}"/>
+                <button name="action_open_create_production_wizard"
+                    string="Create MO"
+                    type="object"
+                    class="btn-primary"
+                    attrs="{'invisible':['|',('task_visible','in',('new','cancel','done')),('is_manufacturing','=',False)]}"/>
+                <button name="action_open_create_production_wizard_sub_task"
+                    string="Process Sub Task"
+                    type="object"
+                    class="btn-primary"
+                    attrs="{'invisible':['|','|',('task_visible','in',('new','cancel','done')),('is_manufacturing','=',True),
+                     ('is_sub_task_processed', '=', True)]}"/>
+                <button name="create_sale_order_line" string="Link Sale Order"
+                        type="object" class="oe_highlight"
+                        attrs="{'invisible': [('is_service', '!=', True)]}"
+                />
+
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="is_procurement" invisible="1"/>
+                <field name="is_manufacturing" invisible="1"/>
+                <field name="is_service" invisible="1"/>
+                <field name="is_sub_task_processed" invisible="1"/>
+                <field name="product_id" readonly="True"
+                       attrs="{'invisible':[('is_service','=',False)]}"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_purchase_order"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-cube"
+                            attrs="{'invisible': ['|',('purchase_order_count', '=', 0)]}">
+                            <field name="purchase_order_count" string="Purchase Order"
+                                widget="statinfo" invisible="0"/>
+                </button>
+                <button name="action_view_done_mrp_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-cube"
+                        attrs="{'invisible': ['|',('mrp_done_order_count', '=', 0)]}">
+                    <field name="mrp_done_order_count"
+                           string="Done Manufacturing Order"
+                           widget="statinfo" invisible="0"/>
+                </button>
+                <button name="action_view_incomplete_mrp_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-cube"
+                        attrs="{'invisible': ['|',('mrp_incomplete_order_count', '=', 0)]}">
+                    <field name="mrp_incomplete_order_count"
+                           string="Inprogress Manufacturing Order"
+                           widget="statinfo" invisible="0"/>
+                </button>
+                <button name="action_view_cancel_mrp_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-cube"
+                        attrs="{'invisible': ['|',('mrp_cancel_order_count', '=', 0)]}">
+                    <field name="mrp_cancel_order_count"
+                           string="Cancel Manufacturing Order"
+                           widget="statinfo" invisible="0"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position="after">
+                <field name="sale_type" readonly="1"/>
+                <field name="project_size_id" options="{'no_create': True}"
+                       readonly="1"/>
+                <field name="task_visible" invisible="1"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button type="object" class="btn btn-primary  pull-right btn-sm"
+                    name="action_inprogess"
+                    string="Confirm"
+                    attrs="{'invisible':[('task_visible','in',('approved','to_approve',
+                    'inprogress','done','cancel','waiting_customer_feedback'))]}"
+                    />
+                 <button type="object" class="btn btn-primary  pull-right btn-sm"
+                    name="action_cancel"
+                    string="Cancel"
+                    attrs="{'invisible':[('task_visible','in',('new','to_approve',
+                    'approved','cancel','done'))]}"
+                    />
+                <button type="object" class="btn btn-primary  pull-right btn-sm"
+                    name="action_done"
+                    string="Done"
+                    attrs="{'invisible':[('task_visible','in',('new','to_approve','cancel','done'))]}"
+                    />
+                <button type="object" class="btn btn-primary  pull-right btn-sm"
+                    name="set_to_draft"
+                    string="Set To Draft"
+                    attrs="{'invisible':[('task_visible','in',('new','approved','to_approve','inprogress','done', 'waiting_customer_feedback'))]}"
+                    />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- inherit Project Task Kanban view-->
+    <record model="ir.ui.view" id="view_task_kanban_inherited">
+        <field name="name">project.task.kanban.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_order">task_sequence</attribute>
+                <attribute name="disable_drag_drop_record">true</attribute>
+            </xpath>
+            <xpath expr="//kanban/field[@name='color']" position="after">
+                <field name="hex_value"/>
+            </xpath>
+            <!-- <xpath expr="//t[@t-name='kanban-box']/div" position="attributes">
+                <attribute name="t-att-style">'background-color:'+record.hex_value.raw_value+';'</attribute>
+            </xpath> -->
+        </field>
+    </record>
+
+    <!-- inherit Project Task Tree view-->
+    <record model="ir.ui.view" id="view_task_tree_inherited">
+        <field name="name">project.task.tree.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="default_order">task_sequence</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

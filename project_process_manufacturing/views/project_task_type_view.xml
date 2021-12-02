@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit form view of project.task.type object to add field -->
+    <record id="view_task_type_edit_form_inherit" model="ir.ui.view">
+        <field name="name">task.type.edit.form.view</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_edit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group/group[1]/field[@name='mail_template_id']"
+                   position="after">
+                <field name="task_visible" required="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit list view of project.task.type object to add field -->
+    <record id="view_task_type_list_inherit" model="ir.ui.view">
+        <field name="name">task.type.list.view</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='description']" position="after">
+                <field name="task_visible"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

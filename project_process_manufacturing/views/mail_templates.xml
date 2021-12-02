@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend_project_process_manufacturing" name="mail assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/project_process_manufacturing/static/src/js/chatter_composer.js"></script>
+                <script type="text/javascript" src="/project_process_manufacturing/static/src/js/product_configurator_modal.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

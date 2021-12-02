@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate='1'>
+
+    <record id="group_plan_project" model="res.groups">
+        <field name="name">Plan Project Manager</field>
+    </record>
+
+    <!--Ihherit rule project_public_members_rule to change domain-->
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'project'), ('name', '=', 'project_public_members_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+    <record id="project.project_public_members_rule" model="ir.rule">
+        <field name="domain_force">['|',
+            ('privacy_visibility', '=', 'followers'),
+            '|',
+            ('message_partner_ids', 'in', [user.partner_id.id]),
+            ('message_channel_ids', 'in', user.partner_id.channel_ids.ids),
+            ]
+        </field>
+    </record>
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'project'), ('name', '=', 'project_public_members_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <!--Ihherit rule task_visibility_rule to change domain-->
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'project'), ('name', '=', 'task_visibility_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+    <record id="project.task_visibility_rule" model="ir.rule">
+        <field name="domain_force">['|',
+            ('project_id.privacy_visibility', '!=', 'followers'),
+            '|',
+            ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+            '|', ('message_partner_ids', 'in', [user.partner_id.id]),
+            # to subscribe check access to the record, follower is not enough at creation
+            '|', ('user_id', '=', user.id),('user_id', '=', False)]
+        </field>
+    </record>
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'project'), ('name', '=', 'task_visibility_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <!--Ihherit rule project_task_rule_portal to change domain-->
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'project'), ('name', '=', 'project_task_rule_portal')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+    <record id="project.project_task_rule_portal" model="ir.rule">
+        <field name="domain_force">['|', '&amp;',
+            ('project_id.privacy_visibility', '=', 'followers'),
+            ('project_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+            '&amp;', ('project_id.privacy_visibility', '=', 'followers'),
+            ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+        ]</field>
+    </record>
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'project'), ('name', '=', 'project_task_rule_portal')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <!--Ihherit rule project_project_rule_portal to change domain-->
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'project'), ('name', '=', 'project_project_rule_portal')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="project.project_project_rule_portal" model="ir.rule">
+        <field name="name">Project: portal users: portal and following</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[
+            '&amp;',
+                ('privacy_visibility', '=', 'followers'),
+                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'project'), ('name', '=', 'project_project_rule_portal')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+<!-- Create rule for workcenter to show own workcenters-->
+    <record id="ir_rule_mrp_workcenter_user_own_workcenter" model="ir.rule">
+        <field name="name">Workcenter: User can only own workcenters</field>
+        <field name="model_id" ref="mrp.model_mrp_workcenter"/>
+        <field name="domain_force">['|', ('user_id', '=', False),('user_id', '=', user.id)]</field>
+        <field name="groups"
+               eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</odoo>

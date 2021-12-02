@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Project Process Form view  -->
+    <record id="project_process_form" model="ir.ui.view">
+        <field name="name">project.process.form</field>
+        <field name="model">process.process</field>
+        <field name="arch" type="xml">
+            <form string="Project Process">
+                <group>
+                    <group>
+                        <field name="name" required="1"/>
+                        <field name="task_validity_days"/>
+                        <field name="project_size_id" string="Project Type" required="1"/>
+                        <field name="user_id"/>
+                    </group>
+                    <group>
+                        <field name="is_sample"/>
+                        <field name="is_service"/>
+                        <field name="is_manufacturing"/>
+                        <field name="is_procurement"/>
+                        <field name="is_approval"/>
+                        <field name="is_internal_approval"/>
+                        <field name="need_customer_feedback"/>
+                        <field name="sequence" readonly="1"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+     <!--Project Process Tree view  -->
+
+     <record id="project_process_tree" model="ir.ui.view">
+        <field name="name">project.process.tree</field>
+        <field name="model">process.process</field>
+        <field name="arch" type="xml">
+            <tree string="Project Process" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name" required="1"/>
+                <field name="task_validity_days"/>              
+                <field name="project_size_id" string="Project Scope"/>
+                <field name="add_follower"/>
+                <field name="user_id"/>
+<!--                <field name="product_id" attrs="{'required':[('is_service','=',True)],'readonly': [('is_service','=',False)]}" domain="[('type', '=', 'service')]"/>-->
+                <field name="is_sample"/>
+<!--                <field name="is_service"/>-->
+                <field name="is_manufacturing"/>
+                <field name="is_procurement"/>
+                <field name="is_approval"/>
+                <field name="is_internal_approval"/>
+                <field name="need_customer_feedback"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Action For Project Process  -->
+    <record id="action_project_process" model="ir.actions.act_window">
+        <field name="name">Project Process</field>
+        <field name="res_model">process.process</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--Menu Item For Project Process  -->
+    <menuitem name="Project Process"
+        id="project_process"
+        parent="project.menu_project_config"
+        action="action_project_process"
+        sequence="5"/>
+</odoo>

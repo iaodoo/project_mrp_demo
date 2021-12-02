@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- backend inherit -->
+    <template id="configure_custom" inherit_id="sale_product_configurator.configure" name="Configure">
+         <xpath expr="//p[hasclass('css_not_available_msg')]" position="inside">
+            <p class="css_not_product_available mt-2 alert alert-info" style="display:none;margin-right: -233px;">New Variant created, and need to update the price list for the Product: <span class="css_not_product_description"></span>.</p>
+        </xpath>    
+    </template>
+</odoo>

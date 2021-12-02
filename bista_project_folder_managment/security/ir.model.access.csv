@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sftp_configuration,access_asftp_configuration,model_sftp_configuration,base.group_user,1,1,1,1
+access_folder_directory,access_folder_directory,model_folder_directory,base.group_user,1,1,1,1
